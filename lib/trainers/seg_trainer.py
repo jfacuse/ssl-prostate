@@ -5,11 +5,8 @@ from functools import partial
 from matplotlib.pyplot import grid
 import numpy as np
 from numpy import nanmean, nonzero, percentile
-from torchprofile import profile_macs
 
 import torch
-import torchvision
-import torchvision.transforms as transforms
 import torch.nn.functional as F
 
 import sys
@@ -38,8 +35,6 @@ from monai.transforms import AsDiscrete
 from monai.metrics import compute_dice, compute_hausdorff_distance
 
 from collections import defaultdict, OrderedDict
-
-import pdb
 
 from report_guided_annotation import extract_lesion_candidates
 from picai_eval import evaluate
@@ -106,7 +101,6 @@ class SegTrainer(BaseTrainer):
     def __init__(self, args):
         super().__init__(args)
         self.model_name = args.proj_name
-        print('DEVICES count', torch.cuda.device_count(), 'is available', torch.cuda.is_available())
         self.scaler = torch.cuda.amp.GradScaler()
         if args.test:
             self.metric_funcs = OrderedDict([
@@ -179,7 +173,6 @@ class SegTrainer(BaseTrainer):
                                                           args=args)
 
             # load pretrained weights
-            print('DEVICES', torch.cuda.device_count())
             if hasattr(args, 'test') and args.test and args.pretrain is not None and os.path.exists(args.pretrain):
                 print(f"=> Start loading the model weights from {args.pretrain} for test")
                 checkpoint = torch.load(args.pretrain, map_location='cpu')
@@ -196,7 +189,7 @@ class SegTrainer(BaseTrainer):
                     state_dict = checkpoint
                 # import pdb
                 # pdb.set_trace()
-                if self.model_name == 'UNETR3D' or self.model_name == 'UNETR3DFusion':
+                if self.model_name == 'UNETR3D':
                     for key in list(state_dict.keys()):
                         if key.startswith('encoder.'):
                             state_dict[key[len('encoder.'):]] = state_dict[key]
@@ -406,13 +399,7 @@ class SegTrainer(BaseTrainer):
                 pass
             else:
                 self.adjust_learning_rate(epoch + i / self.iters_per_epoch, args)
-
-            #image = batch_data['image'].to(args.gpu, non_blocking=True)
-            #target = batch_data['label'].to(args.gpu, non_blocking=True)
-            #image = batch_data['data']
-            #target = batch_data['seg']
-
-            # print(image.shape)
+                
             if args.gpu is not None:
                 try:
                     image = batch_data['data'].to(args.gpu, non_blocking=True)

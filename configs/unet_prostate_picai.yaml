@@ -1,19 +1,19 @@
 # architecture
-arch: vit_base
-enc_arch: ViTBackbone
-dec_arch: UNETR_decoder
+arch: UNet
+enc_arch: 
+dec_arch: 
 
 # wandb
-proj_name: UNETR3D
-run_name: unetr_contrastive_dae_uc_fold4
+proj_name: UNet
+run_name: test_repo
 wandb_id: 
 disable_wandb: 0
-wandb_proj: UNETR3D_uc_picai
+wandb_proj: test_repo
 
 # dataset
 dataset: prostate
 # data_path: /data/leizhou/
-task: Task2301_uc_prostate
+task: Task2201_picai
 data_path: /mnt/researchers/denis-parra/datasets/jfacuse_workdir/nnUNet_raw_data/${task}
 overviews_dir: /mnt/researchers/denis-parra/datasets/jfacuse_workdir/overviews/UNet/overviews/${task}
 json_list: 'split0.json'
@@ -21,7 +21,7 @@ data_seed: 12345
 augmentation_seeds: [0,1,2,3,4,5,6,7]
 ts_fold: 0
 ts_ratio: 0.
-fold_id: 4
+fold_id: 0
 
 # output
 output_dir: /mnt/researchers/denis-parra/datasets/jfacuse_workdir/models/${run_name}
@@ -46,14 +46,15 @@ num_channels: 3
 trainer_name: SegTrainer
 batch_size: 2
 val_batch_size: 1 # per gpu
+use_test_augmentation: false
 start_epoch: 0
 warmup_epochs: 10
-epochs: 200
+epochs: 500
 workers: 8
 num_threads: ${workers}
 pretrain: 
-resume: 
-start_from: /mnt/researchers/denis-parra/datasets/jfacuse_workdir/models/unetr_contrastive_dae_picai/ckpts/best_model.pth.tar
+resume: /mnt/researchers/denis-parra/datasets/jfacuse_workdir/models/unet_byol_mae_picai_f0/ckpts/last_check.pth.tar
+start_from: 
 save_intermediate: false
 
 # drop
@@ -66,10 +67,9 @@ label_smoothing: 0.
 # model
 patch_size: 16
 in_chans: 3
-feature_size: 16
-encoder_embed_dim: 768
-encoder_depth: 12
-encoder_num_heads: 12
+out_chans: 2
+model_strides: [[2, 2, 2], [1, 2, 2], [1, 2, 2], [1, 2, 2], [2, 2, 2]]
+model_features: [32, 64, 128, 256, 512, 1024]
 
 # loss
 smooth_nr: 0.0
@@ -77,12 +77,11 @@ smooth_dr: 1e-6
 
 # optimizer
 type: adamw
-lr: 0.011
+lr: 1.1e-2
 beta1: 0.9
 beta2: 0.95 #0.999
-weight_decay: 0.1 #1e-5
+weight_decay: 0.05 #1e-5
 layer_decay: 0.75
-start_from_lr: 
 
 # logging
 # vis_freq: 100
@@ -102,7 +101,7 @@ rank: 0
 ngpus_per_node:
 
 # randomness
-seed: 5
+seed:
 
 # debugging
 debug: false
@@ -111,4 +110,9 @@ get_best_model: false
 evaluate: false
 
 num_classes: 2
-out_chans: 2
+
+# ensemble testing
+eval_test: false
+models_root_dir: 
+models_to_ensemble: [] # Aqui deben ser los nombres de las run. Solo pueden ser del mismo tipo de arquitectura
+metrics_save_path: 
