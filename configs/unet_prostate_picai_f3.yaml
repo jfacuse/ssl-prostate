@@ -1,0 +1,118 @@
+# architecture
+arch: UNet
+enc_arch: 
+dec_arch: 
+
+# wandb
+proj_name: UNet
+run_name: unet_mae_picai_f3
+wandb_id: 
+disable_wandb: 0
+wandb_proj: SEG_PICAI
+
+# dataset
+dataset: prostate
+# data_path: /data/leizhou/
+task: Task2201_picai
+data_path: /mnt/researchers/denis-parra/datasets/jfacuse_workdir/nnUNet_raw_data/${task}
+overviews_dir: /mnt/researchers/denis-parra/datasets/jfacuse_workdir/overviews/UNet/overviews/${task}
+json_list: 'split0.json'
+data_seed: 12345
+augmentation_seeds: [0,1,2,3,4,5,6,7]
+ts_fold: 0
+ts_ratio: 0.
+fold_id: 3
+
+# output
+output_dir: /mnt/researchers/denis-parra/datasets/jfacuse_workdir/models/${run_name}
+ckpt_dir: ${output_dir}/ckpts
+
+# data preprocessing
+roi_x: 32
+roi_y: 256
+roi_z: 256
+RandFlipd_prob: 0.2
+RandRotate90d_prob: 0.2
+RandScaleIntensityd_prob: 0.1
+RandShiftIntensityd_prob: 0.1
+infer_overlap: 0.5
+spatial_dim: 3
+cache_rate: 1.
+num_samples: 1
+image_shape: [32, 256, 256]
+num_channels: 3
+
+# trainer
+trainer_name: SegTrainer
+batch_size: 2
+val_batch_size: 1 # per gpu
+use_test_augmentation: false
+start_epoch: 0
+warmup_epochs: 10
+epochs: 500
+workers: 8
+num_threads: ${workers}
+pretrain: /mnt/researchers/denis-parra/datasets/jfacuse_workdir/models/unet_mae_alt/ckpts/checkpoint_0299.pth.tar
+resume: 
+start_from: 
+save_intermediate: false
+
+# drop
+drop_path: 0.1
+# tricks
+mixup: 0.
+cutmix: 0.
+label_smoothing: 0.
+
+# model
+patch_size: 16
+in_chans: 3
+out_chans: 2
+model_strides: [[2, 2, 2], [1, 2, 2], [1, 2, 2], [1, 2, 2], [2, 2, 2]]
+model_features: [32, 64, 128, 256, 512, 1024]
+
+# loss
+smooth_nr: 0.0
+smooth_dr: 1e-6
+
+# optimizer
+type: adamw
+lr: 1.1e-2
+beta1: 0.9
+beta2: 0.95 #0.999
+weight_decay: 0.05 #1e-5
+layer_decay: 0.75
+
+# logging
+# vis_freq: 100
+vis_batch_size: 4
+save_freq: 50
+eval_freq: 50
+print_freq: 3
+
+# distributed processing
+gpu: 0
+dist_url: # 'tcp://localhost:10001'
+world_size: 1
+multiprocessing_distributed: false
+dist_backend: nccl
+distributed:
+rank: 0
+ngpus_per_node:
+
+# randomness
+seed:
+
+# debugging
+debug: false
+manual_test: false
+get_best_model: false
+evaluate: false
+
+num_classes: 2
+
+# ensemble testing
+eval_test: false
+models_root_dir: 
+models_to_ensemble: [] # Aqui deben ser los nombres de las run. Solo pueden ser del mismo tipo de arquitectura
+metrics_save_path: 
