@@ -12,7 +12,6 @@ wandb_proj: UNETR3D_uc_picai
 
 # dataset
 dataset: prostate
-# data_path: /data/leizhou/
 task: Task2301_uc_prostate
 data_path: /mnt/researchers/denis-parra/datasets/jfacuse_workdir/nnUNet_raw_data/${task}
 overviews_dir: /mnt/researchers/denis-parra/datasets/jfacuse_workdir/overviews/UNet/overviews/${task}

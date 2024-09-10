@@ -15,7 +15,6 @@ wandb_proj:
 # dataset
 dataset: prostate
 task: Task2201_picai
-#overview_task: Task2210_picai_prostate158_only_negative #Para entrenar denoise
 overview_task: Task2201_picai #Para evaluar
 overviews_valid_dir: /mnt/researchers/denis-parra/datasets/jfacuse_workdir/overviews/UNet/overviews/${task}
 data_path: /mnt/researchers/denis-parra/datasets/jfacuse_workdir/nnUNet_raw_data/${task}
