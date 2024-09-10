@@ -16,7 +16,7 @@ Remember to update the configs with your paths before running the scripts.
 Wandb is used to monitor the training procedures.
 
 ### Stage 2: Segmentation training
-In our expermiments we performed a main training stage on the PICAI dataset and then a finetuning stage on either ChiPC or Prostate158 dataset. To run either of them run the following command with the appropiate config file:
+In our expermiments we performed a main training stage on the PICAI dataset and then a finetuning stage on either ChiPC or Prostate158 dataset. To run either of them run the following command with the appropiate config file. For example, to run training with a UNet on the PICAI dataset use the following command:
 ```
 python main.py configs/unet_prostate_picai.yaml
 ```
